@@ -23,11 +23,10 @@ export const researchModes: ResearchMode[] = [
 ]
 
 export const contextSignals = [
-  'Type 2 diabetes',
-  'Age 58',
-  'eGFR 49 mL/min',
-  'Wants non-insulin options',
-  'Prefers concise summaries',
+  'Patient: John Smith',
+  "Disease: Parkinson's disease",
+  'Focus: Deep Brain Stimulation',
+  'Location: Toronto, Canada',
 ]
 
 export const heroMetrics: Metric[] = [
@@ -46,12 +45,12 @@ export const heroMetrics: Metric[] = [
 ]
 
 export const researchPrompt =
-  'For a 58-year-old adult with type 2 diabetes and moderate CKD, what therapies have the strongest evidence for renal protection and glycemic improvement if insulin is not yet preferred?'
+  "Patient Name: John Smith\nDisease of Interest: Parkinson's disease\nAdditional Query: Deep Brain Stimulation\nLocation: Toronto, Canada"
 
 export const orchestrationSteps: PipelineStep[] = [
   {
     title: 'Context Intake',
-    detail: 'Normalizes patient context, current goals, risks, and excluded therapies.',
+    detail: 'Normalizes structured fields and natural-language requests into the same patient research brief.',
   },
   {
     title: 'Research Retrieval',

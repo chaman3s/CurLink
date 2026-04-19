@@ -32,6 +32,17 @@ export type AnswerView = {
   bullets: string[]
 }
 
+export type QueryIntake = {
+  patientName?: string
+  diseaseOfInterest?: string
+  additionalQuery?: string
+  location?: string
+  naturalQuery: string
+  inputFormat: 'structured' | 'natural'
+  normalizedPrompt: string
+  contextSignals: string[]
+}
+
 export type SidePanel = {
   eyebrow: string
   items: string[]

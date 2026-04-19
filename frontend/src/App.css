@@ -174,6 +174,7 @@ main {
 .hero-metrics article,
 .prompt-box,
 .context-box,
+.intake-preview,
 .response-points article,
 .pipeline-card,
 .evidence-card,
@@ -234,6 +235,7 @@ main {
 
 .prompt-box,
 .context-box,
+.intake-preview,
 .response-points article {
   background: var(--surface-soft);
   border: 1px solid var(--border-soft);
@@ -335,6 +337,60 @@ main {
 .context-input:focus {
   border-color: var(--accent-strong);
   box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+}
+
+.intake-preview {
+  margin-top: 0.75rem;
+}
+
+.intake-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.intake-preview-header span {
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1e3a8a;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 0.35rem 0.55rem;
+  text-transform: capitalize;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 0.45rem 0 0;
+}
+
+.field-grid div {
+  border: 1px solid var(--border-soft);
+  border-radius: 0.55rem;
+  background: #ffffff;
+  padding: 0.7rem;
+}
+
+.field-grid dt {
+  color: var(--text-faint);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.field-grid dd {
+  margin: 0.2rem 0 0;
+  color: var(--text-strong);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.empty-preview {
+  margin: 0.45rem 0 0;
+  color: var(--text-muted);
 }
 
 .form-actions {
@@ -502,5 +558,9 @@ main {
     width: 100%;
     justify-content: center;
     text-align: center;
+  }
+
+  .field-grid {
+    grid-template-columns: 1fr;
   }
 }

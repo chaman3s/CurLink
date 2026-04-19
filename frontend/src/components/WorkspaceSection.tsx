@@ -1,5 +1,6 @@
 import { useMemo, useState, type FormEvent } from 'react'
-import type { AnswerView, ResearchMode, SidePanel } from '../types/prototype'
+import type { AnswerView, QueryIntake, ResearchMode, SidePanel } from '../types/prototype'
+import { parseQueryIntake } from '../utils/queryIntake'
 import SectionHeading from './SectionHeading'
 import SignalChipList from './SignalChipList'
 
@@ -24,8 +25,9 @@ function WorkspaceSection({
 }: WorkspaceSectionProps) {
   const [draftPrompt, setDraftPrompt] = useState(prompt)
   const [draftContext, setDraftContext] = useState(contextSignals.join(', '))
-  const [submittedPrompt, setSubmittedPrompt] = useState(prompt)
-  const [submittedContext, setSubmittedContext] = useState(contextSignals)
+  const [submittedIntake, setSubmittedIntake] = useState<QueryIntake>(() =>
+    parseQueryIntake(prompt, contextSignals),
+  )
   const [hasSubmitted, setHasSubmitted] = useState(false)
 
   const parsedContext = useMemo(
@@ -37,25 +39,35 @@ function WorkspaceSection({
     [draftContext],
   )
 
+  const draftIntake = useMemo(
+    () => parseQueryIntake(draftPrompt, parsedContext),
+    [draftPrompt, parsedContext],
+  )
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    setSubmittedPrompt(draftPrompt.trim())
-    setSubmittedContext(parsedContext.length > 0 ? parsedContext : contextSignals)
+    setSubmittedIntake(draftIntake)
     setHasSubmitted(true)
   }
 
   const handleReset = () => {
     setDraftPrompt(prompt)
     setDraftContext(contextSignals.join(', '))
-    setSubmittedPrompt(prompt)
-    setSubmittedContext(contextSignals)
+    setSubmittedIntake(parseQueryIntake(prompt, contextSignals))
     setHasSubmitted(false)
   }
 
   const responseSummary = hasSubmitted
-    ? `Draft updated for your question: "${submittedPrompt}". The answer uses the attached context below and the selected response mode.`
+    ? `Draft updated for ${submittedIntake.inputFormat} input: "${submittedIntake.normalizedPrompt}" The answer uses the parsed context below and the selected response mode.`
     : answerView.summary
+
+  const extractedFields = [
+    ['Patient name', draftIntake.patientName],
+    ['Disease of interest', draftIntake.diseaseOfInterest],
+    ['Additional query', draftIntake.additionalQuery],
+    ['Location', draftIntake.location],
+  ].filter((field): field is [string, string] => Boolean(field[1]))
 
   return (
     <section className="workspace-grid" id="workspace">
@@ -82,7 +94,7 @@ function WorkspaceSection({
           <div className="composer-layout">
             <div className="prompt-box">
               <label className="prompt-label" htmlFor="research-prompt">
-                Research prompt
+                Patient query
               </label>
               <textarea
                 className="prompt-input"
@@ -107,6 +119,26 @@ function WorkspaceSection({
               />
               {parsedContext.length > 0 && <SignalChipList items={parsedContext} soft />}
             </div>
+          </div>
+
+          <div className="intake-preview">
+            <div className="intake-preview-header">
+              <p className="prompt-label">Parsed query</p>
+              <span>{draftIntake.inputFormat}</span>
+            </div>
+
+            {extractedFields.length > 0 ? (
+              <dl className="field-grid">
+                {extractedFields.map(([label, value]) => (
+                  <div key={label}>
+                    <dt>{label}</dt>
+                    <dd>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : (
+              <p className="empty-preview">Natural question will be used as written.</p>
+            )}
           </div>
 
           <div className="form-actions">
@@ -135,7 +167,7 @@ function WorkspaceSection({
           {hasSubmitted && (
             <div className="submitted-context">
               <p className="prompt-label">Using context</p>
-              <SignalChipList items={submittedContext} soft />
+              <SignalChipList items={submittedIntake.contextSignals} soft />
             </div>
           )}
 
