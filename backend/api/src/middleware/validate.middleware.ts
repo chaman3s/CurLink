@@ -9,7 +9,7 @@ export const validate = <T>(schema: ZodSchema<T>) => {
     } catch (err) {
       if (err instanceof ZodError) {
         return res.status(400).json({
-          error: err.errors
+          error: err.issues
         });
       }
 

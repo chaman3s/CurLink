@@ -1,18 +1,19 @@
 import { Request, Response } from "express";
+import { chatProccess } from "../services/chat.services";
 
 export const handleChat = async (req: Request, res: Response) => {
   try {
     const { disease, query, location } = req.body;
 
-    // 🔥 later: call service here
-    // const result = await chatService.process({ disease, query, location });
+    const result = chatProccess( req.body)
 
     return res.status(200).json({
       success: true,
       data: {
         disease,
         query,
-        location
+        location,
+        result
       }
     });
 
