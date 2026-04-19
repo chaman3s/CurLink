@@ -3,6 +3,6 @@ def extract_context(input: dict):
         "disease": input.get("disease", "").lower(),
         "intent": input.get("query", "").lower(),
         "location": input.get("location")
-    }
 
-def quearyExplantion(query:str):
+def quearyExplantion({ disease, intent }):
+    const queries = new Set();
